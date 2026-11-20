@@ -46,7 +46,16 @@ Model constants were chosen on simulated cohort backtests (five regimes:
 mixed, surge, dilution, weekday-modulated joins, and a post-checkpoint
 regime shift) against reimplementations of both house baselines; the
 ensemble matched the better baseline on smooth worlds and beat it on
-regime-shift worlds, where the single-view models degrade.
+regime-shift worlds, where the single-view models degrade. The spread
+constants were recalibrated after the first submission on three fresh
+105-world sets: the random-walk width the first version borrowed from
+the house baseline (0.5 logit per root day) proved too wide — coverage
+ran at 0.99 against a 0.90 nominal — so it now sits at 0.39 with the
+overall scale at 1.00, a point chosen for its tail behaviour, not its
+mean: under injected per-trophy guide/patch shocks (+1.2 logit on six
+random trophies after the checkpoint) and on the worst shift worlds it
+keeps the best 90th-percentile world loss of the candidate widths,
+while still improving the clean-set mean by about a ninth.
 
 Python 3.13, standard library only, deterministic: no randomness, no
 clock, no network. Runs once per case in well under a second.
@@ -70,15 +79,15 @@ Z = [-1.645, -0.674, 0.0, 0.674, 1.645]
 WINDOW_H = 24.0      # fit window for both views
 HALF_LIFE_H = 12.0   # recency weighting inside the window
 SE0 = 0.4            # shrink scale for slope standard errors
-SIGMA_SCALE = 1.05
+SIGMA_SCALE = 1.00
 SIGMA_MIN = 0.35
 SIGMA_MAX = 2.2
-W_TREND = 0.8        # ensemble weight of the trend view
+W_TREND = 0.85       # ensemble weight of the trend view
 MOVE_CAP = 2.5       # count view: max logit move of a median from last rate
 SIGMA_K_COMMON = 0.85  # spread scale for trophies at/above 5 percent
 RARE_THRESH = 2.0    # last rate (percent) below which a trophy is "rare"
 ASYM_UP_RARE = 1.35  # upper-spread multiplier for rare trophies
-RW_SIGMA = 0.5       # the house random-walk width, logit units per root day
+RW_SIGMA = 0.39      # random-walk width, logit units per root day (calibrated)
 
 
 def clamp_pct(x):
